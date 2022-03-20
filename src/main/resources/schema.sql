@@ -11,7 +11,7 @@ create table if not exists "USER"(
 );
 
 create table if not exists PHONE (
-    id uuid primary key not null,
+    id bigint primary key auto_increment not null,
     user_id uuid not null,
     number varchar(10) not null,
     city_code varchar(10) not null,
