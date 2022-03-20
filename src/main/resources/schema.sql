@@ -15,7 +15,9 @@ create table if not exists PHONE (
     user_id uuid not null,
     number varchar(10) not null,
     city_code varchar(10) not null,
-    country_code varchar(10) not null    
+    country_code varchar(10) not null,
+    created_on timestamp not null,
+    modified_on timestamp not null
 );
 
 alter table  PHONE
@@ -24,7 +26,9 @@ ADD CONSTRAINT fk_phone_user FOREIGN KEY (user_id) references "USER";
 create table if not exists ROLE(
     id bigint primary key auto_increment,
     role_name varchar(100) not null,
-    description varchar(255) 
+    description varchar(255),
+    created_on timestamp not null,
+    modified_on timestamp not null
 );
 
 create table if not exists USER_ROLE(
