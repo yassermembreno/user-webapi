@@ -26,11 +26,9 @@ public class RoleService implements IRoleService {
     public Optional<Role> create(RoleDto roleDto) throws ValidationException{
         Optional<Role> rolePersisted = findByRoleName(roleDto.getRoleName());
 
-        rolePersisted.ifPresent(r -> {try {
-            throw new ValidationException(String.format("Role with Name: {0} already exist.", r.getRoleName()));
-        } catch (ValidationException e) {            
-            e.printStackTrace();
-        }} );
+        if(rolePersisted.isPresent()){
+            throw new ValidationException(String.format("Role with Name: {0} already exist.", rolePersisted.get().getRoleName()));
+        }        
         
         return Optional.of(roleRepository.save(RoleDto.convert(roleDto)));
     }
