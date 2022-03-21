@@ -134,7 +134,7 @@ public class UserDto {
     }
 
     
-    public User convert(UserDto userDto, String passwordEncoded, String token, Role role){
+    public static User convert(UserDto userDto, String passwordEncoded, String token, Role role){
         final User user = new User();
 
         if(userDto == null || passwordEncoded == null || token == null || role == null) {
