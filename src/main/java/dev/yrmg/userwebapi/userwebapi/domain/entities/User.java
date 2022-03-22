@@ -16,6 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -55,7 +57,8 @@ public class User {
     private String token;
 
     @LastModifiedDate
-    @Column(name = "last_login", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_login")
     private Date lastLogin;
 
     @Column(name = "is_active")
@@ -71,10 +74,12 @@ public class User {
     private Set<Role> roles;
 
     @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_on")
     private Date createdOn;
 
     @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modified_on")
     private Date modifiedOn;
 

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,6 +51,7 @@ public class UserService implements IUserService {
         validateUser(userDto);
        
         Optional<Role> role = this.roleRepository.findByRoleName("ADMIN");
+        
         if (role.isPresent()) {
             userDto.setToken(this.jwtUtil.generateToken(userDto.getEmail(), Arrays.asList(role.get())));
             userToSave = Optional.of(
@@ -66,7 +65,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) { 
         return userRepository.findByEmail(email);
     }
 

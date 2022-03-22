@@ -2,11 +2,13 @@ package dev.yrmg.userwebapi.userwebapi.security;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,14 +26,20 @@ import static io.jsonwebtoken.Jwts.parserBuilder;
 
 @Component
 public class JwtUtil {
-    @Value("${security.jwt.secret-key}")
+    
+    
     private String secretKey;
     @Value("${security.jwt.expiration}")
     private long expirationTime;
 
+    @Autowired
+    public JwtUtil(@Value("${security.jwt.secret-key}") String secretKey){        
+        this.secretKey =  Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
+
     public String generateToken(String username, List<Role> roles) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put(secretKey,
+        Claims claims = Jwts.claims().setSubject(username);        
+        claims.put(this.secretKey,
                 roles.stream().map(
                         role ->new SimpleGrantedAuthority(role.getAuthority())
                 ).collect(Collectors.toList()));
@@ -40,12 +48,12 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + expirationTime))
-                .signWith(getSecretKey(), SignatureAlgorithm.HS512)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Jws<Claims> getJWsClaims(String token) throws JwtException{
-        return parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+        return parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token);
     }
 
     public boolean validateToken(String token) throws JwtException{
@@ -66,7 +74,7 @@ public class JwtUtil {
     }
     
     public Key getSecretKey(){
-        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        return Keys.hmacShaKeyFor(this.secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
    
