@@ -9,8 +9,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -38,8 +40,10 @@ public class JwtFilter extends GenericFilterBean {
                         UserDetailsOptional = userDetailService.getUserByJwtToken(token.get());
                         if(UserDetailsOptional.isPresent()) {                        
                             UserDetails userDetails = UserDetailsOptional.get();
-                            SecurityContextHolder.getContext().setAuthentication(
-                                    new PreAuthenticatedAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
+                            PreAuthenticatedAuthenticationToken authToken = new PreAuthenticatedAuthenticationToken(userDetails,"", userDetails.getAuthorities());
+                            
+                            SecurityContextHolder.getContext().setAuthentication(authToken);
+                                   // new PreAuthenticatedAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
                         }
                     }
                 }

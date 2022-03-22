@@ -31,7 +31,7 @@ public class UserController {
     private IUserService userService;
 
     @PostMapping(value = "/user/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Response<UserDto>> register(@Valid @RequestBody UserDto userDto) {
         Response<UserDto> response = new Response<>();
         try{
@@ -72,7 +72,7 @@ public class UserController {
     }
     
     @GetMapping(value = "/user/users", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Response<List<UserDto>>> getAll(){
         Response<List<UserDto>> response = new Response<>();
         try{

@@ -50,7 +50,7 @@ public class UserService implements IUserService {
        
         validateUser(userDto);
        
-        Optional<Role> role = this.roleRepository.findByRoleName("ADMIN");
+        Optional<Role> role = this.roleRepository.findByRoleName("ROLE_ADMIN");
         
         if (role.isPresent()) {
             userDto.setToken(this.jwtUtil.generateToken(userDto.getEmail(), Arrays.asList(role.get())));

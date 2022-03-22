@@ -177,20 +177,6 @@ public class UserDto {
         userDto.setCreatedOn(user.getCreatedOn());
         userDto.setModifiedOn(user.getModifiedOn());
         userDto.setLastLogin(user.getLastLogin());
-        System.out.println(user.getPassword());
-        // userDto.setPhones(user.getPhones().stream().map(
-        //     phone -> new PhoneDto(
-        //             phone.getNumber(),
-        //             phone.getCityCode(),
-        //             phone.getCountryCode()
-        //     )).collect(Collectors.toList()));
-
-        // userDto.setRoles(user.getRoles().stream().map(
-        //         role -> new RoleDto(
-        //                 role.getRoleName(),
-        //                 role.getDescription()
-        //         )).collect(Collectors.toList()));
-        
 
         return userDto;
     }
