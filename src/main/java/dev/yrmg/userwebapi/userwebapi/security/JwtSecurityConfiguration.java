@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,9 +21,15 @@ public class JwtSecurityConfiguration extends WebSecurityConfigurerAdapter{
     @Autowired
     private IUserDetailService detailService;
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(this.detailService).passwordEncoder(this.getPasswordEncoder());
+    }
+    
     protected void configure(HttpSecurity http) throws Exception{
-        http.authorizeHttpRequests().antMatchers("/api/login").permitAll()
-            .antMatchers("/api/h2-console/**").permitAll().anyRequest().authenticated();
+        http.authorizeHttpRequests()
+            .antMatchers("/api/user/login").permitAll()                            
+            .anyRequest().authenticated();
 
         http.csrf().disable();
         http.headers().frameOptions().disable();
@@ -39,7 +46,7 @@ public class JwtSecurityConfiguration extends WebSecurityConfigurerAdapter{
     }
 
     @Bean
-    public AuthenticationManager gAuthenticationManager() throws Exception{
+    public AuthenticationManager getAuthenticationManager() throws Exception{
         return super.authenticationManagerBean();
     }
 }

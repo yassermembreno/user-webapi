@@ -140,19 +140,24 @@ public class UserDto {
         if(userDto == null || passwordEncoded == null || token == null || role == null) {
             throw new IllegalArgumentException("Something went wrong, objects cannot be null.");
         }
-
+        Date now = new Date();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoded);
         user.setToken(token);
         user.setActive(true);
+        user.setLastLogin(now);
         user.setRoles(new HashSet<>(Arrays.asList(role))); 
+        user.setCreatedOn(now);
+        user.setModifiedOn(now);
 
         Set<Phone> phones = userDto.getPhones().stream().map(phoneDto -> {
             Phone phone = new Phone();
             phone.setNumber(phoneDto.getNumber());
             phone.setCityCode(phoneDto.getCityCode());
             phone.setCountryCode(phoneDto.getCountryCode());
+            phone.setCreatedOn(now);
+            phone.setModifiedOn(now);
             phone.setUser(user);
             return phone;
         }).collect(Collectors.toSet());
@@ -165,27 +170,13 @@ public class UserDto {
     public static UserDto convert(User user) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
-        userDto.setName(user.getName());
+        //userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setToken(user.getToken());
         userDto.setActive(user.isActive());
         userDto.setCreatedOn(user.getCreatedOn());
         userDto.setModifiedOn(user.getModifiedOn());
         userDto.setLastLogin(user.getLastLogin());
-
-        userDto.setPhones(user.getPhones().stream().map(
-            phone -> new PhoneDto(
-                    phone.getNumber(),
-                    phone.getCityCode(),
-                    phone.getCountryCode()
-            )).collect(Collectors.toList()));
-
-        userDto.setRoles(user.getRoles().stream().map(
-                role -> new RoleDto(
-                        role.getRoleName(),
-                        role.getDescription()
-                )).collect(Collectors.toList()));
-        
 
         return userDto;
     }
